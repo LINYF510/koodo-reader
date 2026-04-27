@@ -1,6 +1,6 @@
 import React from "react";
 import "./importDialog.css";
-import { driveList } from "../../../constants/driveList";
+import { driveList, freeDriveList } from "../../../constants/driveList";
 import { Trans } from "react-i18next";
 import { ImportDialogProps, ImportDialogState } from "./interface";
 import _ from "underscore";
@@ -59,15 +59,6 @@ class ImportDialog extends React.Component<
           "Please add data source in the setting-Sync and backup first"
         )
       );
-      return;
-    }
-    if (
-      driveList.find((item) => item.value === event.target.value)?.isPro &&
-      !this.props.isAuthed
-    ) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
       return;
     }
     if (event.target.value === "add") {
@@ -377,7 +368,7 @@ class ImportDialog extends React.Component<
         <div className="import-dialog-option">
           {this.state.currentDrive === "" && (
             <>
-              {driveList
+              {freeDriveList
                 .filter(
                   (item) =>
                     !item.scoped &&
@@ -388,17 +379,6 @@ class ImportDialog extends React.Component<
                     key={item.value}
                     className={`cloud-drive-item `}
                     onClick={() => {
-                      if (!this.props.isAuthed) {
-                        toast(
-                          this.props.t(
-                            "Please upgrade to Pro to use this feature"
-                          )
-                        );
-                        this.props.handleSetting(true);
-                        this.props.handleSettingMode("account");
-                        return;
-                      }
-
                       if (!this.props.dataSourceList.includes(item.value)) {
                         this.props.handleSetting(true);
                         this.props.handleSettingMode("sync");

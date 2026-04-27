@@ -141,6 +141,8 @@ export const driveList = [
     scoped: false,
   },
 ];
+
+export const freeDriveList = driveList.filter((item) => !item.isPro);
 interface ConfigItem {
   label: string;
   value: string;

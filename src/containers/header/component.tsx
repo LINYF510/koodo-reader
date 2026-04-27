@@ -34,18 +34,16 @@ import {
   getChatLocale,
   getTaskStats,
   getWebsiteUrl,
-  openInBrowser,
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
   vexComfirmAsync,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
-import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
-import { getTempToken, updateUserConfig } from "../../utils/request/user";
+import { updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -60,7 +58,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isNewVersion: false,
       width: document.body.clientWidth,
       isDataChange: false,
-      isHidePro: false,
       isSync: false,
     };
   }
@@ -93,10 +90,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           ConfigService.getReaderConfig("storageLocation")
         );
       }
-      if (ConfigService.getReaderConfig("isHidePro") === "yes") {
-        this.setState({ isHidePro: true });
-      }
-
       //Check for data update
       //upgrade data from old version
       let res1 = await upgradeStorage(this.handleFinishUpgrade);
@@ -685,14 +678,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
-              if (!isElectron && !this.props.isAuthed) {
-                toast(
-                  this.props.t("Please upgrade to Pro to use this feature")
-                );
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("account");
-                return;
-              }
               this.setState({ isSync: true });
               if (this.props.isAuthed) {
                 await this.props.handleFetchUserInfo();
@@ -721,70 +706,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </div>
         </div>
 
-        {!this.props.isAuthed && !this.state.isHidePro ? (
-          <div className="header-report-container">
-            <span
-              style={{ textDecoration: "underline" }}
-              onClick={() => {
-                if (
-                  window.location.hostname !== "web.koodoreader.com" &&
-                  !isElectron
-                ) {
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("account");
-                  return;
-                }
-                this.props.history.push("/login");
-              }}
-            >
-              <Trans>Pro version</Trans>
-              <span> </span>
-            </span>
-
-            <span
-              className="icon-close icon-pro-close"
-              onClick={() => {
-                ConfigService.setReaderConfig("isHidePro", "yes");
-                this.setState({ isHidePro: true });
-              }}
-            ></span>
-          </div>
-        ) : null}
-        {this.props.isAuthed &&
-        this.props.userInfo &&
-        ((this.props.userInfo.type === "pro" &&
-          this.props.userInfo.valid_until <
-            new Date().getTime() / 1000 + 30 * 24 * 3600) ||
-          (this.props.userInfo.type === "trial" &&
-            this.props.userInfo.valid_until <
-              new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
-          <div className="header-report-container">
-            <span
-              style={{ textDecoration: "underline" }}
-              onClick={async () => {
-                let response = await getTempToken();
-                if (response.code === 200) {
-                  let tempToken = response.data.access_token;
-                  let deviceUuid = await TokenService.getFingerprint();
-                  openInBrowser(
-                    getWebsiteUrl() +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh"
-                        : "/en") +
-                      "/pricing?temp_token=" +
-                      tempToken +
-                      "&device_uuid=" +
-                      deviceUuid
-                  );
-                } else if (response.code === 401) {
-                  this.props.handleFetchAuthed();
-                }
-              }}
-            >
-              <Trans>Renew Pro</Trans>
-            </span>
-          </div>
-        ) : null}
         {KookitConfig.CloudMode !== "production" ? (
           <div className="header-report-container" style={{ right: "300px" }}>
             <span
@@ -805,7 +726,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        <SupportDialog />
         <UpdateInfo />
       </div>
     );

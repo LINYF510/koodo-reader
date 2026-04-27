@@ -23,7 +23,11 @@ import {
   vexComfirmAsync,
 } from "../../../utils/common";
 
-import { driveInputConfig, driveList } from "../../../constants/driveList";
+import {
+  driveInputConfig,
+  driveList,
+  freeDriveList,
+} from "../../../constants/driveList";
 import {
   ConfigService,
   KookitConfig,
@@ -91,9 +95,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+      toast("This data source is unavailable in this edition");
       return;
     }
     this.props.handleSettingDrive(targetDrive);
@@ -683,7 +685,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
-              ...driveList,
+              ...freeDriveList,
             ]
               .filter((item) => !this.props.dataSourceList.includes(item.value))
               .filter((item) => {

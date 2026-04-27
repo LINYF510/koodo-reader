@@ -4,7 +4,6 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import GeneralSetting from "../../../containers/settings/generalSetting";
 import SyncSetting from "../../../containers/settings/syncSetting";
-import AccountSetting from "../../../containers/settings/accountSetting";
 import PluginSetting from "../../../containers/settings/pluginSetting";
 import ReadingSetting from "../../../containers/settings/readingSetting";
 import AppearanceSetting from "../../../containers/settings/appearanceSetting";
@@ -62,7 +61,7 @@ class SettingDialog extends React.Component<
       case "sync":
         return "Sync and backup";
       case "account":
-        return "Account";
+        return "Sync and backup";
       case "about":
         return "About";
       case "ai":
@@ -107,7 +106,6 @@ class SettingDialog extends React.Component<
               "Reading",
               ""
             )}
-            {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
           </div>
 
           <hr className="setting-dialog-sidebar-divider" />
@@ -151,7 +149,7 @@ class SettingDialog extends React.Component<
             ) : this.props.settingMode === "sync" ? (
               <SyncSetting />
             ) : this.props.settingMode === "account" ? (
-              <AccountSetting />
+              <SyncSetting />
             ) : this.props.settingMode === "data" ? (
               <DataSetting />
             ) : this.props.settingMode === "about" ? (
