@@ -48,9 +48,12 @@ class SettingDialog extends React.Component<
     );
   };
 
+  getCurrentMode = () => {
+    return this.props.settingMode === "account" ? "sync" : this.props.settingMode;
+  };
+
   getCurrentPageTitle = () => {
-    const currentMode =
-      this.props.settingMode === "account" ? "sync" : this.props.settingMode;
+    const currentMode = this.getCurrentMode();
     switch (currentMode) {
       case "general":
         return "General";
@@ -74,8 +77,7 @@ class SettingDialog extends React.Component<
   };
 
   render() {
-    const currentMode =
-      this.props.settingMode === "account" ? "sync" : this.props.settingMode;
+    const currentMode = this.getCurrentMode();
     return (
       <div className="setting-dialog-container">
         {/* 左侧导航栏 */}

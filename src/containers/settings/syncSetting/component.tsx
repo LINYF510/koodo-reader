@@ -95,7 +95,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
-      toast("This data source is unavailable in this edition");
+      toast("This data source is not available");
       return;
     }
     this.props.handleSettingDrive(targetDrive);
