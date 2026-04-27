@@ -49,7 +49,9 @@ class SettingDialog extends React.Component<
   };
 
   getCurrentPageTitle = () => {
-    switch (this.props.settingMode) {
+    const currentMode =
+      this.props.settingMode === "account" ? "sync" : this.props.settingMode;
+    switch (currentMode) {
       case "general":
         return "General";
       case "reading":
@@ -59,8 +61,6 @@ class SettingDialog extends React.Component<
       case "plugins":
         return "Plugins";
       case "sync":
-        return "Sync and backup";
-      case "account":
         return "Sync and backup";
       case "about":
         return "About";
@@ -74,6 +74,8 @@ class SettingDialog extends React.Component<
   };
 
   render() {
+    const currentMode =
+      this.props.settingMode === "account" ? "sync" : this.props.settingMode;
     return (
       <div className="setting-dialog-container">
         {/* 左侧导航栏 */}
@@ -140,23 +142,21 @@ class SettingDialog extends React.Component<
           </div>
 
           <div className="setting-dialog-info">
-            {this.props.settingMode === "general" ? (
+            {currentMode === "general" ? (
               <GeneralSetting />
-            ) : this.props.settingMode === "reading" ? (
+            ) : currentMode === "reading" ? (
               <ReadingSetting />
-            ) : this.props.settingMode === "appearance" ? (
+            ) : currentMode === "appearance" ? (
               <AppearanceSetting />
-            ) : this.props.settingMode === "sync" ? (
+            ) : currentMode === "sync" ? (
               <SyncSetting />
-            ) : this.props.settingMode === "account" ? (
-              <SyncSetting />
-            ) : this.props.settingMode === "data" ? (
+            ) : currentMode === "data" ? (
               <DataSetting />
-            ) : this.props.settingMode === "about" ? (
+            ) : currentMode === "about" ? (
               <AboutSetting />
-            ) : this.props.settingMode === "ai" ? (
+            ) : currentMode === "ai" ? (
               <AISetting />
-            ) : this.props.settingMode === "background" ? (
+            ) : currentMode === "background" ? (
               <BackgroundSetting />
             ) : (
               <PluginSetting />
